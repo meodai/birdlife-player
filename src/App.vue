@@ -1,6 +1,6 @@
 <script>
 import Player from './components/Player.vue'
-import {Howl, Howler} from 'howler';
+
 
 export default {
   name: 'app',
@@ -12,7 +12,7 @@ export default {
 
 <template>
   <div id="app">
-    <Player src="/dove.mp3" autoplay />
+    <Player src="/dove.mp3" autoplay/>
   </div>
 </template>
 
