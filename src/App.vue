@@ -12,19 +12,22 @@ export default {
 
 <template>
   <div id="app">
-    <Player src="/dove.mp3" autoplay/>
+    <Player src="/nachtigall.mp3" title="Dis mami" autoplay controls/>
   </div>
 </template>
 
 
 
 <style>
+h1, h2 ,h3 {
+  all: unset;
+  display: block;
+  font-weight: bold;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
