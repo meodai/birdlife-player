@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "spectrogram": "^0.0.6",
     "vue": "^2.5.17"
   },
   "devDependencies": {

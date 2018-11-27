@@ -1,5 +1,6 @@
 <script>
 import {Howl, Howler} from 'howler';
+import spectrogram from 'spectrogram';
 
 export default {
   name: 'Player',
@@ -45,10 +46,24 @@ export default {
     var dataArray = new Uint8Array(bufferLength);
     this.analyser.getByteTimeDomainData(dataArray);
     
+    this.convasRect = this.$refs.canvas.getBoundingClientRect();
 
     this.canvasCtx =  this.setupCanvas();
-    this.canvasCtx.clearRect(0, 0, 400, 200);
-    this.convasRect = this.$refs.canvas.getBoundingClientRect();
+    this.canvasCtx.clearRect(0, 0, this.convasRect.width, this.convasRect.height);
+    let spectro = spectrogram(this.$refs.canvas, {
+      audio: {
+        enable: true
+      },
+      colors: (steps) => {
+        var colors = new Array(steps).fill();
+        colors = colors.map((step, i) => (`hsl(0,0%,${(1 - i / steps) * 100}%)`))
+        console.log(colors)
+        return colors;
+      }
+    });
+
+    spectro.connectSource(this.analyser, Howler.ctx);
+    spectro.start();
     /* draw bars */
     /*
     const draw = () => {
@@ -69,29 +84,24 @@ export default {
       }
     };
     */
-    
     /* draw sonogram */
-    var scriptNode = Howler.ctx.createScriptProcessor(this.analyser.fftSize, 1, 1);
-    scriptNode.onaudioprocess = () => {
-      dataArray = new Uint8Array(this.analyser.frequencyBinCount);
-      this.analyser.getByteFrequencyData(dataArray);
-      console.log(dataArray)
-    }
-    
+    /*
     const draw = () => {
       this.drawVisual = requestAnimationFrame(draw);
       this.analyser.getByteFrequencyData(dataArray);
       let canvas = this.$refs.canvas;
-      this.canvasCtx.fillStyle = `#000`;
+      this.canvasCtx.fillStyle = `#f00`;
       for (let i = 0; i < dataArray.length; i++) {
         //console.log(dataArray)
         let value = dataArray[i];
-        this.canvasCtx.fillStyle = `hsl(360,0%,${value/128 * 100}%)`;
+        this.canvasCtx.fillStyle = `hsl(360,0%,${value/200 * 100}%)`;
         this.canvasCtx.fillRect(this.convasRect.width - 1, this.convasRect.height - i, 1, 1);
       }
       
     }
     draw();
+
+    */
   },
 
   methods: {
@@ -127,7 +137,9 @@ export default {
           <span>Play</span>
         </button>
       </div>
-      <canvas class="canvas" ref="canvas"></canvas>
+      <div class="player__visual">
+        <canvas class="canvas" ref="canvas"></canvas>
+      </div>
     </div>
   </article>
 </template>
@@ -136,11 +148,28 @@ export default {
 <style scoped>
 .player {
   background: #212121;
-  padding: 4% 2%;
+  padding: 3%;
 }
 
 .player__inner {
   display: flex;
+  align-items: stretch;
+}
+
+.player__visual {
+  flex-grow: 1;
+  position: relative;
+  padding-top: 10%;
+}
+
+
+.canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #fff;
 }
 
 .player__title {
@@ -193,10 +222,5 @@ button span {
   display: none;
 }
 
-.canvas {
-  width: 100%;
-  height: 10rem;
-  background-color: #fff;
-}
 
 </style>

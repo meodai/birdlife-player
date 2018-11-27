@@ -12,7 +12,7 @@ export default {
 
 <template>
   <div id="app">
-    <Player src="/nachtigall.mp3" title="Dis mami" autoplay controls/>
+    <Player src="/nachtigall.mp3" title="Dis mami" autoplay controls />
   </div>
 </template>
 
